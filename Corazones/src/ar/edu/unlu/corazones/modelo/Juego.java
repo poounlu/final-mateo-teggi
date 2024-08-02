@@ -231,7 +231,7 @@ public class Juego implements Observable {
 
 	// Metodo que reparte las cartas a cada jugador, como se hace de forma habitual
 	// 1 1 1 1, 2 2 2 2, 3 3 3 3, etc.
-	private void repartirCartas() {
+	public void repartirCartas() {
 		for (int i = 0; i < cantCartasRepartidas; i++) {
 			for (Jugador jugador : jugadores) {
 				jugador.recibirCarta(mazo.sacarCarta());

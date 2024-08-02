@@ -10,6 +10,7 @@ import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -795,6 +796,13 @@ public class VistaGrafica extends JFrame implements Clickeable, IVista{
 
 	@Override
 	public void finPasajeDeCartas() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void setControlador(ar.edu.unlu.controlador.Controlador controlador) throws RemoteException {
 		// TODO Auto-generated method stub
 		
 	}

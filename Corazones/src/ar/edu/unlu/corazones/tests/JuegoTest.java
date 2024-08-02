@@ -60,8 +60,8 @@ class JuegoTest {
     @Test
     void testIniciarJuego() {
         // Configuración de mocks para el juego
-        when(jugadorMock1.tieneDosDeTrebol()).thenReturn(0);
-        when(jugadorMock1.tirarCarta(0)).thenReturn(new Carta(Palo.TREBOL, 2));
+        when(jugador1.tieneDosDeTrebol()).thenReturn(0);
+        when(jugador1.tirarCarta(0)).thenReturn(new Carta(Palo.TREBOL, 2));
         juego.iniciarJuego();
         assertEquals("Jugador A", juego.getGanadorJuego());
     }

@@ -1,8 +1,9 @@
 package ar.edu.unlu.vista;
 
+import java.rmi.RemoteException;
 import java.util.Scanner;
 
-import ar.edu.unlu.corazones.controlador.Controlador;
+import ar.edu.unlu.controlador.Controlador;
 
 /**
  * VISTA CONSOLA
@@ -61,7 +62,7 @@ public class VistaConsola implements IVista {
 	
 	//Iniciar
 	@Override
-	public void iniciar(){
+	public void iniciar() throws RemoteException{
 		boolean salir = false;
 		while(!salir) {
 			limpiarPantalla();
@@ -112,7 +113,7 @@ public class VistaConsola implements IVista {
 	//                         ALTA
 	// *************************************************************
 	
-	private void nuevoJugador() {
+	private void nuevoJugador() throws RemoteException {
 		if (!this.controlador.cantidadJugadoresValida()) {
 			System.out.println("\n" + "---------- NUEVO JUGADOR! -------------" + "\n");
 			System.out.print("Ingrese el nombre del nuevo jugador: ");
@@ -127,7 +128,7 @@ public class VistaConsola implements IVista {
 	//                     MODIFICACION
 	// *************************************************************
 
-	private void modificarJugador() {
+	private void modificarJugador() throws RemoteException {
 		listaJugadores();
 		System.out.print("Por favor, ingrese el numero de jugador que quiere modificar: ");
 		int pos = entrada.nextInt();
@@ -148,7 +149,7 @@ public class VistaConsola implements IVista {
 	//                 LISTA DE JUGADORES
 	// *************************************************************
 
-	private void listaJugadores() {
+	private void listaJugadores() throws RemoteException {
 		System.out.println("\n" + "Lista de jugadores:");
 		String[] jugadores = controlador.listaJugadores();
 		String s = "\n";
@@ -168,7 +169,7 @@ public class VistaConsola implements IVista {
 	//                         JUGAR
 	// *************************************************************
 	
-	private void jugar() {
+	private void jugar() throws RemoteException {
 		if (this.controlador.cantidadJugadoresValida()) {
 			System.out.println("Juego comenzado!");
 			continuar();
@@ -178,14 +179,14 @@ public class VistaConsola implements IVista {
 		}		
 	}
 	
-	private void combinacionRondaJugada() {
+	private void combinacionRondaJugada() throws RemoteException {
 		System.out.println("****************************");
 		System.out.println("*         RONDA #" + this.controlador.numeroRonda() + "         *");
 		System.out.println("*    	  JUGADA #" + this.controlador.numeroJugada() + "        *");
 		System.out.println("****************************");
 	}
 	
-	private void combinacionRondaPasaje() {
+	private void combinacionRondaPasaje() throws RemoteException {
 		System.out.println("****************************");
 	    System.out.println("*         RONDA #" + this.controlador.numeroRonda() + "         *");
 		System.out.println("*     PASAJE DE CARTAS     *");
@@ -197,7 +198,7 @@ public class VistaConsola implements IVista {
 	// *************************************************************
 
 	@Override
-	public void pedirCarta() {
+	public void pedirCarta() throws RemoteException {
 		//Mostrar cartas en mesa
 		combinacionRondaJugada();
 		System.out.println("Es el turno del jugador: "
@@ -233,7 +234,7 @@ public class VistaConsola implements IVista {
 	// *************************************************************
 	
 	@Override
-	public void mostrarGanadorJugada() {
+	public void mostrarGanadorJugada() throws RemoteException {
 		combinacionRondaJugada();
 		System.out.println("*      CARTAS EN MESA      *");
 		System.out.println();
@@ -255,7 +256,7 @@ public class VistaConsola implements IVista {
 	// *************************************************************
 
 	@Override
-	public void jugador2deTrebol() {
+	public void jugador2deTrebol() throws RemoteException {
 		//Mostrar cartas en mesa
 		combinacionRondaJugada();
 		System.out.println("Es el turno del jugador: "
@@ -278,7 +279,7 @@ public class VistaConsola implements IVista {
 	// *************************************************************
 	
 	@Override
-	public void pasajeDeCartas() {
+	public void pasajeDeCartas() throws RemoteException {
 		combinacionRondaPasaje();
 		System.out.println(this.controlador.direccionPasaje());
 		continuar();
@@ -289,7 +290,7 @@ public class VistaConsola implements IVista {
 	// *************************************************************
 
 	@Override
-	public void pedirCartaPasaje() {
+	public void pedirCartaPasaje() throws RemoteException {
 		combinacionRondaPasaje();
 		System.out.println("Es el turno del jugador: "
 				+ this.controlador.jugadorActual()); //Digo quien tiene que jugar
@@ -344,7 +345,7 @@ public class VistaConsola implements IVista {
 	// *************************************************************
 	
 	@Override
-	public void ganadorJuego() {
+	public void ganadorJuego() throws RemoteException {
 		System.out.println("****************************");
 		System.out.println("*  		FIN DEL JUEGO      *");
 		System.out.println("****************************");
@@ -353,7 +354,7 @@ public class VistaConsola implements IVista {
 	}
 	
 	@Override
-	public void finDeRonda() { 
+	public void finDeRonda() throws RemoteException { 
 		System.out.println("****************************");
 		System.out.println("* 	   FIN DE LA RONDA	   *");
 		System.out.println("****************************");

@@ -59,9 +59,11 @@ public class Juego extends ObservableRemoto implements Serializable, IJuego {
 
 	// Funcionalidad corazones rotos
 	private boolean corazonesRotos;
+	
+	private static Juego instancia;
 
 	// Lista de observadores
-	private List<Observador> observadores;
+	//private List<Observador> observadores;
 
 	// *************************************************************
 	// 						CONSTRUCTOR
@@ -78,7 +80,7 @@ public class Juego extends ObservableRemoto implements Serializable, IJuego {
 		agregarJugadores("Jugador C");
 		agregarJugadores("Jugador D");
 
-		this.observadores = new ArrayList<>();
+//		this.observadores = new ArrayList<>();
 		this.jugadas = new ArrayList<>();
 	}
 
@@ -100,7 +102,7 @@ public class Juego extends ObservableRemoto implements Serializable, IJuego {
 	// .Tiene que mostrar al jugador ganador
 	// **************************************************************
 
-	public void iniciarJuego() {
+	public void iniciarJuego() throws RemoteException {
 		boolean juegoTerminado = false;
 		while (!juegoTerminado) {
 			mazo = new Mazo();
@@ -118,7 +120,7 @@ public class Juego extends ObservableRemoto implements Serializable, IJuego {
 				}
 
 				while (i < jugadores.length) { // Recorro todos los jugadores
-					notificar(EventosObservador.PEDIR_CARTA);
+					notificarObservadores(EventosObservador.PEDIR_CARTA);
 					boolean tieneOtraCartaParaJugar = false;
 					//Si estamos sin corazones rotos, consulta si peude jugar otra carta que su mano que no sea la misma de la mesa
 					if (!this.corazonesRotos) {
@@ -136,20 +138,20 @@ public class Juego extends ObservableRemoto implements Serializable, IJuego {
 
 				// Determino el perdedor de esta jugada, obteniendo el siguiente a jugar
 				turno = jugada.determinarPerdedor();
-				notificar(EventosObservador.GANADOR_JUGADA);
+				notificarObservadores(EventosObservador.GANADOR_JUGADA);
 			}
 			
 			// Finalizada la ronda, se comprueba si se llego al puntaje maxixo para finalizar el juego
 			if (puntajeMaximoActual() >= puntajeMaximo) {
 				juegoTerminado = true;
 			}
-			notificar(EventosObservador.FIN_DE_RONDA);
+			notificarObservadores(EventosObservador.FIN_DE_RONDA);
 			Mano.reiniciarContadorJugadas();
 			ronda++;
 		}
 		// Fin del juego, determino al ganador
 		determinarGanador();
-		notificar(EventosObservador.FIN_DE_JUEGO);
+		notificarObservadores(EventosObservador.FIN_DE_JUEGO);
 	}
 
 	//Metodo que me dice si es posible iniciar el juego con esa cantidad de jugadores
@@ -162,19 +164,19 @@ public class Juego extends ObservableRemoto implements Serializable, IJuego {
 	}
 
 	// Metodo para indicar que un jugador tiro la carta de corazones
-	private void tiroCorazones() {
-		if (cartaAJugar.getPalo() == Palo.CORAZONES && !this.corazonesRotos) {
-			notificar(EventosObservador.CORAZONES_ROTOS);
+	private void tiroCorazones() throws RemoteException {
+		if (cartaAJugar.getPalo() == Palo.CORAZON && !this.corazonesRotos) {
+			notificarObservadores(EventosObservador.CORAZONES_ROTOS);
 			this.corazonesRotos = true;
 		}
 	}
 
 	// Metodo para indicar que se tiro mal la carta por parte del usuario
-	private void tiroCartaIncorrecta() {
-		if (cartaAJugar.getPalo() == Palo.CORAZONES) {
-			notificar(EventosObservador.CARTA_TIRADA_INCORRECTA_CORAZONES);
+	private void tiroCartaIncorrecta() throws RemoteException {
+		if (cartaAJugar.getPalo() == Palo.CORAZON) {
+			notificarObservadores(EventosObservador.CARTA_TIRADA_INCORRECTA_CORAZONES);
 		} else {
-			notificar(EventosObservador.CARTA_TIRADA_INCORRECTA);
+			notificarObservadores(EventosObservador.CARTA_TIRADA_INCORRECTA);
 		}
 	}
 
@@ -207,7 +209,7 @@ public class Juego extends ObservableRemoto implements Serializable, IJuego {
 	// *************************************************************
 
 	// Metodo para que el jugador que tiene el 2 de trebol tire la carta
-	private void primercarta2Trebol(Mano jugada) {
+	private void primercarta2Trebol(Mano jugada) throws RemoteException {
 		boolean encontrado = false;
 		int pos = 0;
 		while (!encontrado && pos < jugadores.length) {
@@ -216,7 +218,7 @@ public class Juego extends ObservableRemoto implements Serializable, IJuego {
 				encontrado = true;
 				turno = pos;
 				jugada.tirarCartaEnMesa(turno, jugadores[pos].tirarCarta(dosTrebol), false, this.corazonesRotos); //Tira el 2 trebol
-				notificar(EventosObservador.JUGO_2_DE_TREBOL);
+				notificarObservadores(EventosObservador.JUGO_2_DE_TREBOL);
 				turno = (turno + 1) % jugadores.length;
 				;
 			} else {
@@ -290,7 +292,7 @@ public class Juego extends ObservableRemoto implements Serializable, IJuego {
 	// *************************************************************
 
 	// Metodo que determina a donde se van a pasar las cartas
-	private void pasajeDeCartas() {
+	private void pasajeDeCartas() throws RemoteException {
 		int variablePasaje = 0;
 
 		// *************************************************************
@@ -319,15 +321,15 @@ public class Juego extends ObservableRemoto implements Serializable, IJuego {
 		default:
 			break;
 		}
-		notificar(EventosObservador.PASAJE_DE_CARTAS);
+		notificarObservadores(EventosObservador.PASAJE_DE_CARTAS);
 		if (variablePasaje != 0) {
 			intercambioDeCartas(variablePasaje);
-			notificar(EventosObservador.FIN_PASAJE_DE_CARTAS);
+			notificarObservadores(EventosObservador.FIN_PASAJE_DE_CARTAS);
 		}
 	}
 
 	// Metodo privado que realiza el intercambio
-	private void intercambioDeCartas(int valor) {
+	private void intercambioDeCartas(int valor) throws RemoteException {
 		// Esto funciona para que el intercambio se haga sobre el final y los otros
 		// jugadores no tengan acceso a las cartas nuevas recibidas
 		ArrayList<Carta[]> arregloDeCartasAIntercambiar = new ArrayList<Carta[]>(cantJugadores);
@@ -352,7 +354,7 @@ public class Juego extends ObservableRemoto implements Serializable, IJuego {
 
 			for (int i = 0; i < cantCartasIntercambio; i++) {
 				// Obtengo la carta que jugo el jugador
-				notificar(EventosObservador.PEDIR_CARTA_PASAJE);
+				notificarObservadores(EventosObservador.PEDIR_CARTA_PASAJE);
 				cartasIntercambio[i] = this.cartaAJugar;
 			}
 
@@ -486,8 +488,8 @@ public class Juego extends ObservableRemoto implements Serializable, IJuego {
 	//					 MVC Y OBSERVER
 	// *************************************************************
 
-/* 	@Override // Notificar los eventos
-	public void notificar(Object evento) {
+/* 	@Override // notificarObservadores los eventos
+	public void notificarObservadores(Object evento) {
 		for (Observador observador : this.observadores) {
 			observador.actualizar(evento, this);
 		}

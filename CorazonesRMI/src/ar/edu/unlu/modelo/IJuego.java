@@ -42,5 +42,11 @@ public interface IJuego extends IObservableRemoto{
 
     int cantidadJugadores() throws RemoteException;
 
-    void agregarObservador(Observador observador) throws RemoteException;
+	boolean agregarJugadores(String nombre);
+
+	String cartasPosiblesAJugarPasaje();
+
+	boolean reemplazarJugadores(String nombre, int pos);
+
+   // void agregarObservador(Observador observador) throws RemoteException;
 }

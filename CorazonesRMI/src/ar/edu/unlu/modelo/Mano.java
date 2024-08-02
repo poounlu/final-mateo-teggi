@@ -62,7 +62,7 @@ public class Mano implements Serializable{
 		if(primeraCarta()) {
 			//El primero, que sea cualquier carta que no sea de corazones: Eso es valido
 			//El segundo, que sea una carta de corazones y quiera iniciar jugada sin que esten los corazones rotos: Eso es invalido
-			if(cartaEnJuego.getPalo() == Palo.CORAZONES && !corazonesRotos) {
+			if(cartaEnJuego.getPalo() == Palo.CORAZON && !corazonesRotos) {
 				isCartaValida = false;
 			}else {primeraCartaJugada = cartaEnJuego;}
 		}
@@ -129,10 +129,10 @@ public class Mano implements Serializable{
 	private int puntajeCarta(Carta carta) {
 		int puntaje;
 		//Si la carta es de corazones, entonces vale 1 punto
-		if (carta.getPalo() == Palo.CORAZONES){
+		if (carta.getPalo() == Palo.CORAZON){
 			puntaje = CORAZONES;
 		//En cambio, si es la dama de picas, vale 13 puntos
-		} else if (carta.getPalo() == Palo.PICAS && carta.getValor() == 12) {
+		} else if (carta.getPalo() == Palo.PICA && carta.getValor() == 12) {
 			puntaje = DAMADEPICAS;
 		//Sino, la carta no vale nada en este juego
 		} else {
